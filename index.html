@@ -153,9 +153,9 @@ const C = {
   slate:"#464D62",red:"#EA0048",green:"#4EA72E",amber:"#F59E0B"
 };
 
-const EJS_SERVICE  = "service_pg7y46z";
-const EJS_TEMPLATE = "template_2n8ocey";
-const EJS_KEY      = "GXnN9xWPQH6v7VBxD";
+const EJS_SERVICE  = "service_g3ffieb";
+const EJS_TEMPLATE = "template_d8fzy5f";
+const EJS_KEY      = "LH3fMBIuQxggKMZl0";
 
 const SECTIONS = [
   {
@@ -258,12 +258,13 @@ async function sendLead(){
   const secSum=SECTIONS.map(s=>{const r=secScore(s.id,state.answers);return `${s.title}: ${r.score}/${r.max} (${r.pct}%) -- ${riskLevel(r.pct).label}`;}).join("\n");
   const gapsText=gaps.length?gaps.map((g,i)=>`${i+1}. [${g.section}] ${g.text} (${g.ref})`).join("\n"):"Nessun gap critico.";
   const f=state.form;
+  const ass_type="EUBR Assessment"
   const msg=`EUBR ASSESSMENT -- ISA Digital Consulting\nReg. (UE) 2023/1542\n\nLEAD\nNome: ${f.name}\nAzienda: ${f.company}\nRuolo: ${f.role}\nEmail: ${f.email}\nTelefono: ${f.phone}\nData: ${new Date().toLocaleDateString("it-IT")}\n\nRISULTATI GLOBALI\nPunteggio: ${g.score}/${MAX_SCORE} (${g.pct}%)\nLivello: ${risk.label}\n\nSEZIONI\n${secSum}\n\nGAP CRITICI\n${gapsText}`;
   try{
     await fetch("https://api.emailjs.com/api/v1.0/email/send",{
       method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({service_id:EJS_SERVICE,template_id:EJS_TEMPLATE,user_id:EJS_KEY,
-        template_params:{to_name:"ISA Digital Consulting",from_name:`${f.name} -- ${f.company}`,reply_to:f.email,message:msg}})
+        template_params:{to_name:"ISA Digital Consulting",from_name:`${f.name} -- ${f.company}`,reply_to:f.email,message:msg, ass_type:ass_type}})
     });
   }catch(e){}
 }
